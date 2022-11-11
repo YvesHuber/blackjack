@@ -29,14 +29,41 @@ export default function Cards() {
             });
     }
 
+    function getHiddenCard(setCard, currentCards) {
+        let card = {}
+        fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
+            .then(response => response.json())
+            .then(data => card = data.cards[0])
+            // .then(data => setCard(data.cards[0]))            //so wird die Karte jeweils überschrieben
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            console.log(card)
+            
+    }
+
+    function startGame(){
+        getCard(setPlayercard, playercard)
+        getCard(setPlayercard, playercard)
+        getHiddenCard(setDealercard, dealercard)
+    }
+
     function clearCards() {
         setPlayercard([]);
         setDealercard([]);
+        startGame()
     }
 
     useEffect(() => {
         getDeck()
-    }, []);               //Ruft beim starten der Seite die function getDeck () auf
+    }, []);  
+    useEffect(() => {
+        console.log(deckID)
+        if(deckID != undefined){
+            startGame()
+        }
+    }, [deckID]);              
+    //Ruft beim starten der Seite die function getDeck () auf
 
     useEffect(() => {
         console.log(playercard)
@@ -50,25 +77,30 @@ export default function Cards() {
             <header className="App-header">
                 {/*{card && <img src={card.image}></img>}      dies hat nur funktioniert als card oben noch kein Array war*/}
                 <Grid container rowSpacing={3} alignItems="flex-start" justifyContent="center">
-                    <Grid item>
-                        <Button variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}>Player</Button>
+                    <Grid>
+                        <h2>Dealer</h2>
                     </Grid>
-                    <Grid container spacing={5} alignItems="center" justifyContent="center">
-                        {playercard.map((c) => <Grid item>
-                            <img src={c.image}></img>
+                <Grid container spacing={5} alignItems="center" justifyContent="center">
+                        {dealercard.map((c) => <Grid item>
+                            <img height={"80vh"} src={c.image}></img>
                             <p>{c.value}</p>
                         </Grid>)}
                     </Grid>
 
-                    <Grid item>
-                        <Button variant="contained" onClick={(e) => getCard(setDealercard, dealercard)}>Dealer</Button>
+
+                    <Grid>
+                        <h2>Player</h2>
                     </Grid>
                     <Grid container spacing={5} alignItems="center" justifyContent="center">
-                        {dealercard.map((c) => <Grid item>
-                            <img src={c.image}></img>
+                        {playercard.map((c) => <Grid item>
+                            <img height={"80vh"} src={c.image}></img>
                             <p>{c.value}</p>
                         </Grid>)}
                     </Grid>
+                    <Grid item>
+                        <Button variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}>Player</Button>
+                    </Grid>
+
 
                     <Grid item>
                         <Button variant="contained" onClick={clearCards}>Restart</Button>
