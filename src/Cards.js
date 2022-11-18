@@ -36,7 +36,12 @@ export default function Cards() {
                 value = 10
             }
             else if(card.value == "ACE"){
-                value = 11
+                if(counter + 11 >= 21){
+                    value = 1
+                }
+                else {
+                    value = 11
+                }
             }
             else {
                 value = parseInt(card.value)
