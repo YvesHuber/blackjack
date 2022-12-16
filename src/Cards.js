@@ -87,6 +87,12 @@ export default function Cards() {
     function stay() {
         if (dealercounter < 17) {
             getCard(setDealercard, dealercard)
+            calculateValue(dealercard, setDealercounter, dealercounter)
+            if (dealercounter < 17){
+                getCard(setDealercard, dealercard)
+                calculateValue(dealercard, setDealercounter, dealercounter)
+               
+            }
         }
 
         if (dealercounter > playercounter && dealercounter <= 21) {
@@ -121,8 +127,8 @@ export default function Cards() {
         calculateValue(playercard, setPlayercounter, playercounter)
     }, [playercard]);
     useEffect(() => {
-        if (playercounter > 21) {
-            alert("you lost")
+        if(playercounter > 21){
+            stay()
         }
     }, [playercounter]);
     useEffect(() => {
