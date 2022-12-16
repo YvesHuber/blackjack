@@ -70,7 +70,7 @@ export default function Cards() {
         getCard(setPlayercard, playercard)
     }
     function stay(){
-        if (dealercounter <= 16){
+        if (dealercounter < 17){
             getCard(setDealercard, dealercard)
         }
 
