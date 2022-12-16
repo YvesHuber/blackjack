@@ -14,6 +14,7 @@ export default function Cards() {
     const [playercounter, setPlayercounter] = useState([0])
     const [dealercounter, setDealercounter] = useState([0])
     const [loading, setLoading] = useState(true)
+    const [hiddencard, sethiddencard] = useState(true)
 
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
@@ -28,7 +29,6 @@ export default function Cards() {
         let value = 0
         for(let card of cards){
             console.log(card)
-            if(card.hidden != true){
                 if (card.value == "KING"){
                     value = 10
                  }
@@ -49,8 +49,9 @@ export default function Cards() {
                  else {
                      value = parseInt(card.value)
                  }
-            }
+            
             setcounter(counter + value)
+
         }
 
     }
@@ -63,6 +64,19 @@ export default function Cards() {
             .catch((error) => {
             });
     }
+    function call(){
+        getCard(setPlayercard, playercard)
+        if (dealercounter <= 16){
+            getCard(setDealercard, dealercard)
+        }
+    }
+    function stay(){
+        if (dealercounter <= 16){
+            getCard(setDealercard, dealercard)
+        }
+    }
+
+
 
 
     function startGame(){
@@ -85,6 +99,11 @@ export default function Cards() {
         calculateValue(playercard, setPlayercounter, playercounter)
     }, [playercard]);  
     useEffect(() => {
+        if(playercounter > 21){
+            alert("you lost")
+        }
+    }, [playercounter]);  
+    useEffect(() => {
         calculateValue(dealercard, setDealercounter, dealercounter)
     }, [dealercard]);  
 
@@ -103,7 +122,18 @@ export default function Cards() {
                obj.hidden = true
                cards[1] = obj;
                setDealercard(cards)
-               calculateValue(dealercard, setDealercounter, dealercounter)
+               calculateValue(cards, setDealercounter, dealercounter)
+
+            }
+            else if (dealercard.length > 2){
+                let cards = dealercard
+               let obj = dealercard[1]
+               obj.hidden = false
+               cards[1] = obj;
+               setDealercard(cards)
+               sethiddencard(false)
+               calculateValue(cards, setDealercounter, dealercounter)
+
             }
             /*
             if (dealercounter <= 16 && dealercard.length == 2){
@@ -111,6 +141,7 @@ export default function Cards() {
             }
             */
         }
+
         
     }, [dealercard]);  
 
@@ -167,7 +198,10 @@ export default function Cards() {
                     </Grid>
                     <Grid item>
                         { playercounter <= 21
-                        ?<Button variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}>Player</Button>
+                        ?<Grid> 
+                            <Button variant="contained" onClick={(e) => call()}>Call</Button>
+                            <Button variant="contained" onClick={(e) => stay()}>Stay</Button>
+                            </Grid>
                         :<h2>Busted</h2>                   
                         }
                     </Grid>
