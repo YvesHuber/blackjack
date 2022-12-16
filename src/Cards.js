@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import './App.css';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -57,6 +58,7 @@ export default function Cards() {
     }
 
     function getCard(setCard, currentCards) {
+        document.getElementById("vid").play();
         fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
             .then(response => response.json())
             .then(data => setCard(currentCards => [...currentCards, data.cards[0]]))
@@ -83,7 +85,7 @@ export default function Cards() {
 
 
 
-    function startGame(){
+    function startGame() {
         getCard(setPlayercard, playercard)
         getCard(setPlayercard, playercard)
         getCard(setDealercard, dealercard)
@@ -97,8 +99,9 @@ export default function Cards() {
     }
 
     useEffect(() => {
+        document.getElementById("vid").play();
         getDeck()
-    }, []);  
+    }, []);
     useEffect(() => {
         calculateValue(playercard, setPlayercounter, playercounter)
     }, [playercard]);  
@@ -157,67 +160,55 @@ export default function Cards() {
 
 
     return (<div className="App">
-            <header className="App-header">
-                {/*{card && <img src={card.image}></img>}      dies hat nur funktioniert als card oben noch kein Array war*/}
-                <Grid container direction="column" justifyContent="center" alignItems="center">
-                    <Grid>
-                        <h2>Dealer</h2>
-                    </Grid>
-                <Grid container spacing={5} alignItems="center" justifyContent="center">
-                        {dealercard.map((c,k) => 
-                        <Grid item key={k}>
-                            {c.hidden
-                            ?
-                            <>
-                            <img height={"80vh"} src="Turnover.png"></img>
-                            <p>{c.value}</p>
-                            </>
-                            :
-                            <>
-                            <img height={"80vh"} src={c.image}></img>
-                            <p>{c.value}</p>
-                            </>
-                            }
-                            
-                        </Grid>
-                        )}
-                    </Grid>
-                    <Grid>
-                        <h1>{dealercounter}</h1>
-                    </Grid>
+        <header className="App-header">
+            <audio id='vid'autoplay controls loop >
+                <source  src="/mudick.mp3" type="audio/ogg" />
+            </audio>
 
-                    <Grid>
-                        <h2>Player</h2>
-                    </Grid>
-                    <Grid container spacing={5} alignItems="center" justifyContent="center">
-                        {playercard.map((c,k) => 
-                        <Grid item key={k}>
-                            <img height={"80vh"} src={c.image}></img>
-                            <p>{c.value}</p>
-                        </Grid>
-                        )}
-                    </Grid>
-                    <Grid>
-                        <h1>{playercounter}</h1>
-                    </Grid>
-                    <Grid item>
-                        { playercounter <= 21
-                        ?<Grid> 
-                            <Button variant="contained" onClick={(e) => call()}>Call</Button>
-                            <Button variant="contained" onClick={(e) => stay()}>Stay</Button>
-                            </Grid>
-                        :<h2>Busted</h2>                   
-                        }
-                    </Grid>
+            <script>
+            </script>
+            {/*{card && <img src={card.image}></img>}      dies hat nur funktioniert als card oben noch kein Array war*/}
+            <Grid container rowSpacing={3} alignItems="flex-start" justifyContent="center">
 
 
-                    <Grid item>
-                        <Button variant="contained" onClick={clearCards}>Restart</Button>
-                    </Grid>
+                <Grid>
+                    <h2>Dealer</h2>
 
                 </Grid>
-            </header>
-        </div>
+                <Grid container spacing={5} alignItems="center" justifyContent="center">
+                    {dealercard.map((c) => <Grid item>
+                        <img height={"80vh"} src={c.image}></img>
+                        <p>{c.value}</p>
+                    </Grid>)}
+                </Grid>
+
+
+                <Grid>
+                    <h2>Player</h2>
+                </Grid>
+
+                <Grid container spacing={5} alignItems="center" justifyContent="center">
+
+                    {playercard.map((c) => <Grid item >
+                        <img class="cards" height={"80vh"} src={c.image}></img>
+                        <p>{c.value}</p>
+                    </Grid>
+                    )}
+                    <img height={"150vh"} src='/dick2.png' class="dick"></img>
+
+                </Grid>
+                <Grid item>
+                    <Button class="PlayerBtn" variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}><img class="drawImg"  />Player</Button>
+                </Grid>
+
+
+                <Grid item>
+                    <Button class="RestartBtn" variant="contained" onClick={clearCards}>Restart</Button>
+                </Grid>
+
+            </Grid>
+        </header>
+    </div>
 
     )
 }
