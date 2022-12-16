@@ -7,6 +7,12 @@ import {useEffect, useState} from 'react';
 import { sizeHeight } from '@mui/system';
 import LinearProgress from '@mui/material/LinearProgress';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 export default function Cards() {
     const [deck, setDeck] = useState([]);
@@ -17,6 +23,15 @@ export default function Cards() {
     const [dealercounter, setDealercounter] = useState([0])
     const [loading, setLoading] = useState(true)
     const [hiddencard, sethiddencard] = useState(true)
+
+    const [win, setWin] = useState(false)
+    const [lost, setLost] = useState(false)
+
+    const handlewinshow = setWin(true);
+    const handlewinclose = setWin(false);
+
+    const handlelostshow = setLost(true);
+    const handlelostclose = setLost(false);
 
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
@@ -75,10 +90,10 @@ export default function Cards() {
         }
 
         if(dealercounter > playercounter && dealercounter <= 21){
-            alert("you lost")
+            handlelostshow()
         }
         else if (dealercounter < playercounter && playercounter <= 21 ){
-            alert("you won")
+            handlewinshow()
 
         }
     }
@@ -222,6 +237,30 @@ export default function Cards() {
 
             </Grid>
         </header>
+        <Dialog open={win} onClose={handlewinclose}>
+        <DialogTitle id="alert-dialog-title">
+          {"You Won"}
+        </DialogTitle>
+        <DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlewinclose} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={lost} onClose={handlelostclose}>
+        <DialogTitle id="alert-dialog-title">
+          {"You Lost"}
+        </DialogTitle>
+        <DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlelostclose} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
 
     )
