@@ -12,11 +12,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { TextField } from '@mui/material';
 
 
 export default function Cards() {
+
     const [deck, setDeck] = useState([]);
     const [deckID, setDeckID] = useState();
+    const [betfield, setBetField] = useState();
+    const [bet, setBet] = useState();
     const [dealercard, setDealercard] = useState([])
     const [playercard, setPlayercard] = useState([])
     const [playercounter, setPlayercounter] = useState([0])
@@ -191,6 +195,13 @@ export default function Cards() {
             {/*{card && <img src={card.image}></img>}      dies hat nur funktioniert als card oben noch kein Array war*/}
             <Grid container rowSpacing={3} alignItems="flex-start" justifyContent="center">
 
+            <Grid>
+                    <TextField onChange={(e) => setBetField(e.target.field)}></TextField>
+                    <Button onClick={(e) => setBet(betfield)}>Bet</Button>
+                </Grid>
+                <Grid>
+                    Current Bet {bet}
+                </Grid>
 
                 <Grid>
                     <h2>Dealer</h2>
@@ -209,7 +220,7 @@ export default function Cards() {
                         }
                     </Grid>)}
                 </Grid>
-
+    
 
                 <Grid>
                     <h2>Player</h2>
@@ -247,6 +258,7 @@ export default function Cards() {
           {"You Won"}
         </DialogTitle>
         <DialogContent>
+        You won {bet *2}
         </DialogContent>
         <DialogActions>
           <Button onClick={handlewinclose} autoFocus>
@@ -259,6 +271,7 @@ export default function Cards() {
           {"You Lost"}
         </DialogTitle>
         <DialogContent>
+            You lost {bet}
         </DialogContent>
         <DialogActions>
           <Button onClick={handlelostclose} autoFocus>
