@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import './App.css';
+import './Cards.css';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import {useEffect, useState} from 'react';
@@ -209,10 +210,10 @@ export default function Cards() {
                 </Grid>
 
                 <Grid item>
-                    <Button class="PlayerBtn" variant="contained" onClick={(e) => call()}><img class="drawImg"  />Call</Button>
+                    <Button class="CallBtn" variant="contained" onClick={(e) => call()}><img class="drawImg"  />Call</Button>
                 </Grid>
                 <Grid item>
-                    <Button class="PlayerBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg"  />Stay</Button>
+                    <Button class="StayBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg"  />Stay</Button>
                 </Grid>
 
                 <Grid item>
