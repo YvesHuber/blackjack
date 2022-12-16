@@ -41,7 +41,7 @@ export default function Cards() {
                      value = 10
                  }
                  else if(card.value == "ACE"){
-                     if(counter + 11 >= 21){
+                     if(counter + 11 > 21){
                          value = 1
                      }
                      else {
