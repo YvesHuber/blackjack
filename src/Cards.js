@@ -66,13 +66,17 @@ export default function Cards() {
     }
     function call(){
         getCard(setPlayercard, playercard)
-        if (dealercounter <= 16){
-            getCard(setDealercard, dealercard)
-        }
     }
     function stay(){
         if (dealercounter <= 16){
             getCard(setDealercard, dealercard)
+        }
+        if(dealercounter > playercounter && dealercounter <= 21){
+            alert("you lost")
+        }
+        else if (dealercounter < playercounter && playercounter <= 21 ){
+            alert("you won")
+
         }
     }
 
