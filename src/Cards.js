@@ -122,7 +122,7 @@ export default function Cards() {
     }, [playercard]);  
     useEffect(() => {
         if(playercounter > 21){
-            alert("you lost")
+            handlelostshow()
         }
     }, [playercounter]);  
     useEffect(() => {
