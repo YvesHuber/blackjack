@@ -87,15 +87,11 @@ export default function Cards() {
     function stay(){
         if (dealercounter < 17){
             getCard(setDealercard, dealercard)
+            calculateValue(dealercard, setDealercounter, dealercounter)
             if (dealercounter < 17){
                 getCard(setDealercard, dealercard)
-                if (dealercounter < 17){
-                    getCard(setDealercard, dealercard)
-                    if (dealercounter < 17){
-                        getCard(setDealercard, dealercard)
-            
-                    }
-                }
+                calculateValue(dealercard, setDealercounter, dealercounter)
+               
             }
         }
 
