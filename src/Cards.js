@@ -175,9 +175,16 @@ export default function Cards() {
 
                 </Grid>
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
-                    {dealercard.map((c) => <Grid item>
+                    {dealercard.map((c) =>
+                     <Grid item>
+                        {c.hidden 
+                        ? <img height={"80vh"} src="Turnover.png"></img>
+                        : 
+                        <>
                         <img height={"80vh"} src={c.image}></img>
                         <p>{c.value}</p>
+                        </>
+                        }
                     </Grid>)}
                 </Grid>
 
