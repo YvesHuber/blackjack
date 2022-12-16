@@ -27,11 +27,11 @@ export default function Cards() {
     const [win, setWin] = useState(false)
     const [lost, setLost] = useState(false)
 
-    const handlewinshow = setWin(true);
-    const handlewinclose = setWin(false);
+    const handlewinshow = () => {setWin(true);};
+    const handlewinclose = () => {setWin(false);};
 
-    const handlelostshow = setLost(true);
-    const handlelostclose = setLost(false);
+    const handlelostshow = () => {setLost(true);};
+    const handlelostclose = () => {setLost(false);};
 
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
@@ -236,8 +236,7 @@ export default function Cards() {
                 </Grid>
 
             </Grid>
-        </header>
-        <Dialog open={win} onClose={handlewinclose}>
+            <Dialog open={win} onClose={handlewinclose}>
         <DialogTitle id="alert-dialog-title">
           {"You Won"}
         </DialogTitle>
@@ -261,6 +260,7 @@ export default function Cards() {
           </Button>
         </DialogActions>
       </Dialog>
+        </header>
     </div>
 
     )
