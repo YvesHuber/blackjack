@@ -85,9 +85,18 @@ export default function Cards() {
         getCard(setPlayercard, playercard)
     }
     function stay(){
-        while (dealercounter < 17){
+        if (dealercounter < 17){
             getCard(setDealercard, dealercard)
-
+            if (dealercounter < 17){
+                getCard(setDealercard, dealercard)
+                if (dealercounter < 17){
+                    getCard(setDealercard, dealercard)
+                    if (dealercounter < 17){
+                        getCard(setDealercard, dealercard)
+            
+                    }
+                }
+            }
         }
 
         if(dealercounter > playercounter && dealercounter <= 21){
