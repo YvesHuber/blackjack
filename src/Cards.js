@@ -3,7 +3,7 @@ import './App.css';
 import './Cards.css';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { sizeHeight } from '@mui/system';
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -27,11 +27,11 @@ export default function Cards() {
     const [win, setWin] = useState(false)
     const [lost, setLost] = useState(false)
 
-    const handlewinshow = () => {setWin(true);};
-    const handlewinclose = () => {setWin(false);};
+    const handlewinshow = () => { setWin(true); };
+    const handlewinclose = () => { setWin(false); };
 
-    const handlelostshow = () => {setLost(true);};
-    const handlelostclose = () => {setLost(false);};
+    const handlelostshow = () => { setLost(true); };
+    const handlelostclose = () => { setLost(false); };
 
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
@@ -41,32 +41,32 @@ export default function Cards() {
             });
     }
 
-    function calculateValue(cards, setcounter,counter){
+    function calculateValue(cards, setcounter, counter) {
         setcounter(0)
         let value = 0
-        for(let card of cards){
+        for (let card of cards) {
             console.log(card)
-                if (card.value == "KING"){
-                    value = 10
-                 }
-                 else if (card.value == "QUEEN"){
-                     value = 10
-                 }
-                 else if (card.value == "JACK"){
-                     value = 10
-                 }
-                 else if(card.value == "ACE"){
-                     if(counter + 11 > 21){
-                         value = 1
-                     }
-                     else {
-                         value = 11
-                     }
-                 }
-                 else {
-                     value = parseInt(card.value)
-                 }
-            
+            if (card.value == "KING") {
+                value = 10
+            }
+            else if (card.value == "QUEEN") {
+                value = 10
+            }
+            else if (card.value == "JACK") {
+                value = 10
+            }
+            else if (card.value == "ACE") {
+                if (counter + 11 > 21) {
+                    value = 1
+                }
+                else {
+                    value = 11
+                }
+            }
+            else {
+                value = parseInt(card.value)
+            }
+
             setcounter(counter + value)
 
         }
@@ -81,18 +81,18 @@ export default function Cards() {
             .catch((error) => {
             });
     }
-    function call(){
+    function call() {
         getCard(setPlayercard, playercard)
     }
-    function stay(){
-        if (dealercounter < 17){
+    function stay() {
+        if (dealercounter < 17) {
             getCard(setDealercard, dealercard)
         }
 
-        if(dealercounter > playercounter && dealercounter <= 21){
+        if (dealercounter > playercounter && dealercounter <= 21) {
             handlelostshow()
         }
-        else if (dealercounter < playercounter && playercounter <= 21 ){
+        else if (dealercounter < playercounter && playercounter <= 21) {
             handlewinshow()
 
         }
@@ -119,42 +119,42 @@ export default function Cards() {
     }, []);
     useEffect(() => {
         calculateValue(playercard, setPlayercounter, playercounter)
-    }, [playercard]);  
+    }, [playercard]);
     useEffect(() => {
-        if(playercounter > 21){
+        if (playercounter > 21) {
             alert("you lost")
         }
-    }, [playercounter]);  
+    }, [playercounter]);
     useEffect(() => {
         calculateValue(dealercard, setDealercounter, dealercounter)
-    }, [dealercard]);  
+    }, [dealercard]);
 
     useEffect(() => {
-        if(deckID != undefined){
+        if (deckID != undefined) {
             startGame()
             setLoading(false)
         }
-    }, [deckID]);              
+    }, [deckID]);
 
     useEffect(() => {
-        if(dealercard != undefined){
-            if (dealercard.length == 2){
+        if (dealercard != undefined) {
+            if (dealercard.length == 2) {
                 let cards = dealercard
-               let obj = dealercard[1]
-               obj.hidden = true
-               cards[1] = obj;
-               setDealercard(cards)
-               calculateValue(cards, setDealercounter, dealercounter)
+                let obj = dealercard[1]
+                obj.hidden = true
+                cards[1] = obj;
+                setDealercard(cards)
+                calculateValue(cards, setDealercounter, dealercounter)
 
             }
-            else if (dealercard.length > 2){
+            else if (dealercard.length > 2) {
                 let cards = dealercard
-               let obj = dealercard[1]
-               obj.hidden = false
-               cards[1] = obj;
-               setDealercard(cards)
-               sethiddencard(false)
-               calculateValue(cards, setDealercounter, dealercounter)
+                let obj = dealercard[1]
+                obj.hidden = false
+                cards[1] = obj;
+                setDealercard(cards)
+                sethiddencard(false)
+                calculateValue(cards, setDealercounter, dealercounter)
 
             }
             /*
@@ -164,10 +164,10 @@ export default function Cards() {
             */
         }
 
-        
-    }, [dealercard]);  
 
-    if(loading){
+    }, [dealercard]);
+
+    if (loading) {
         return (
             <LinearProgress></LinearProgress>
         )
@@ -176,8 +176,8 @@ export default function Cards() {
 
     return (<div className="App">
         <header className="App-header">
-            <audio id='vid'autoplay controls loop >
-                <source  src="/mudick.mp3" type="audio/ogg" />
+            <audio id='vid' autoplay controls loop >
+                <source src="/mudick.mp3" type="audio/ogg" />
             </audio>
 
             <script>
@@ -187,48 +187,50 @@ export default function Cards() {
 
 
                 <Grid>
-                    <h2>Dealer</h2>
+                    <h2 className='dealerTitle'>Dealer</h2>
 
                 </Grid>
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
                     {dealercard.map((c) =>
-                     <Grid item>
-                        {c.hidden 
-                        ? <img height={"80vh"} src="Turnover.png"></img>
-                        : 
-                        <>
-                        <img height={"80vh"} src={c.image}></img>
-                        <p>{c.value}</p>
-                        </>
-                        }
-                    </Grid>)}
+                        <Grid item>
+                            {c.hidden
+                                ? <img height={"80vh"} src="Turnover.png"></img>
+                                :
+                                <>
+                                    <img height={"80vh"} src={c.image}></img>
+                                    <p style={{ color: "white" }}>{c.value}</p>
+                                </>
+                            }
+                        </Grid>)}
                 </Grid>
 
 
                 <Grid>
-                    <h2>Player</h2>
+                    <h2 className='playerTitle'>Player</h2>
                 </Grid>
 
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
 
                     {playercard.map((c) => <Grid item >
                         <img class="cards" height={"80vh"} src={c.image}></img>
-                        <p>{c.value}</p>
+                        <p style={{ color: "white" }}>{c.value}</p>
                     </Grid>
                     )}
                     <img height={"150vh"} src='/dick2.png' class="dick"></img>
 
                 </Grid>
 
-                <Grid item>
-                    {playercounter}
+                <Grid item style={{
+                    color: "white", fontWeight: "bold", fontSize: "45px", radius: "100px",padding:"15px" }}>
+                    <p style={{border: "2px solid gold", borderRadius: "100px",padding: "15px"}}>{playercounter}</p>   
                 </Grid>
 
+
                 <Grid item>
-                    <Button class="CallBtn" variant="contained" onClick={(e) => call()}><img class="drawImg"  />Call</Button>
+                    <Button class="CallBtn" variant="contained" onClick={(e) => call()}><img class="drawImg" />Call</Button>
                 </Grid>
                 <Grid item>
-                    <Button class="StayBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg"  />Stay</Button>
+                    <Button class="StayBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg" />Stay</Button>
                 </Grid>
 
                 <Grid item>
@@ -237,29 +239,29 @@ export default function Cards() {
 
             </Grid>
             <Dialog open={win} onClose={handlewinclose}>
-        <DialogTitle id="alert-dialog-title">
-          {"You Won"}
-        </DialogTitle>
-        <DialogContent>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlewinclose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={lost} onClose={handlelostclose}>
-        <DialogTitle id="alert-dialog-title">
-          {"You Lost"}
-        </DialogTitle>
-        <DialogContent>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlelostclose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+                <DialogTitle id="alert-dialog-title">
+                    {"You Won"}
+                </DialogTitle>
+                <DialogContent>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handlewinclose} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={lost} onClose={handlelostclose}>
+                <DialogTitle id="alert-dialog-title">
+                    {"You Lost"}
+                </DialogTitle>
+                <DialogContent>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handlelostclose} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </header>
     </div>
 
