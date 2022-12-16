@@ -58,7 +58,6 @@ export default function Cards() {
     }
 
     function getCard(setCard, currentCards) {
-        document.getElementById("vid").play();
         fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
             .then(response => response.json())
             .then(data => setCard(currentCards => [...currentCards, data.cards[0]]))
@@ -73,6 +72,7 @@ export default function Cards() {
         if (dealercounter <= 16){
             getCard(setDealercard, dealercard)
         }
+
         if(dealercounter > playercounter && dealercounter <= 21){
             alert("you lost")
         }
@@ -99,7 +99,6 @@ export default function Cards() {
     }
 
     useEffect(() => {
-        document.getElementById("vid").play();
         getDeck()
     }, []);
     useEffect(() => {
@@ -197,10 +196,17 @@ export default function Cards() {
                     <img height={"150vh"} src='/dick2.png' class="dick"></img>
 
                 </Grid>
+
                 <Grid item>
-                    <Button class="PlayerBtn" variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}><img class="drawImg"  />Player</Button>
+                    {playercounter}
                 </Grid>
 
+                <Grid item>
+                    <Button class="PlayerBtn" variant="contained" onClick={(e) => call()}><img class="drawImg"  />Call</Button>
+                </Grid>
+                <Grid item>
+                    <Button class="PlayerBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg"  />Stay</Button>
+                </Grid>
 
                 <Grid item>
                     <Button class="RestartBtn" variant="contained" onClick={clearCards}>Restart</Button>
