@@ -2,23 +2,59 @@
 import './App.css';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { useEffect, useState } from 'react';
-import "./Cards.css";
-import draw from "./Download__2_-removebg-preview.png"
+import {useEffect, useState} from 'react';
+import { sizeHeight } from '@mui/system';
+import LinearProgress from '@mui/material/LinearProgress';
+
+
 export default function Cards() {
     const [deck, setDeck] = useState([]);
     const [deckID, setDeckID] = useState();
     const [dealercard, setDealercard] = useState([])
     const [playercard, setPlayercard] = useState([])
+    const [playercounter, setPlayercounter] = useState([0])
+    const [dealercounter, setDealercounter] = useState([0])
+    const [loading, setLoading] = useState(true)
+    const [hiddencard, sethiddencard] = useState(true)
 
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
             .then(response => response.json())
             .then(data => setDeckID(data.deck_id))
             .catch((error) => {
-                console.error('Error:', error);
             });
-        console.log(deckID);
+    }
+
+    function calculateValue(cards, setcounter,counter){
+        setcounter(0)
+        let value = 0
+        for(let card of cards){
+            console.log(card)
+                if (card.value == "KING"){
+                    value = 10
+                 }
+                 else if (card.value == "QUEEN"){
+                     value = 10
+                 }
+                 else if (card.value == "JACK"){
+                     value = 10
+                 }
+                 else if(card.value == "ACE"){
+                     if(counter + 11 >= 21){
+                         value = 1
+                     }
+                     else {
+                         value = 11
+                     }
+                 }
+                 else {
+                     value = parseInt(card.value)
+                 }
+            
+            setcounter(counter + value)
+
+        }
+
     }
 
     function getCard(setCard, currentCards) {
@@ -28,27 +64,28 @@ export default function Cards() {
             .then(data => setCard(currentCards => [...currentCards, data.cards[0]]))
             // .then(data => setCard(data.cards[0]))            //so wird die Karte jeweils überschrieben
             .catch((error) => {
-                console.error('Error:', error);
             });
     }
-
-    function getHiddenCard(setCard, currentCards) {
-        let card = {}
-        fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
-            .then(response => response.json())
-            .then(data => card = data.cards[0])
-            // .then(data => setCard(data.cards[0]))            //so wird die Karte jeweils überschrieben
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        console.log(card)
-
+    function call(){
+        getCard(setPlayercard, playercard)
+        if (dealercounter <= 16){
+            getCard(setDealercard, dealercard)
+        }
     }
+    function stay(){
+        if (dealercounter <= 16){
+            getCard(setDealercard, dealercard)
+        }
+    }
+
+
+
 
     function startGame() {
         getCard(setPlayercard, playercard)
         getCard(setPlayercard, playercard)
-        getHiddenCard(setDealercard, dealercard)
+        getCard(setDealercard, dealercard)
+        getCard(setDealercard, dealercard)
     }
 
     function clearCards() {
@@ -62,22 +99,61 @@ export default function Cards() {
         getDeck()
     }, []);
     useEffect(() => {
-
-        console.log(deckID)
-        if (deckID != undefined) {
-            startGame()
+        calculateValue(playercard, setPlayercounter, playercounter)
+    }, [playercard]);  
+    useEffect(() => {
+        if(playercounter > 21){
+            alert("you lost")
         }
-    }, [deckID]);
-    //Ruft beim starten der Seite die function getDeck () auf
+    }, [playercounter]);  
+    useEffect(() => {
+        calculateValue(dealercard, setDealercounter, dealercounter)
+    }, [dealercard]);  
 
     useEffect(() => {
-
-        console.log(playercard)
-    }, [playercard]);     //wird erst gemacht, wenn playercard gemacht/abgefüllt wurde
+        if(deckID != undefined){
+            startGame()
+            setLoading(false)
+        }
+    }, [deckID]);              
 
     useEffect(() => {
-        console.log(dealercard)
-    }, [dealercard]);     //wird erst gemacht, wenn playercard gemacht/abgefüllt wurde
+        if(dealercard != undefined){
+            if (dealercard.length == 2){
+                let cards = dealercard
+               let obj = dealercard[1]
+               obj.hidden = true
+               cards[1] = obj;
+               setDealercard(cards)
+               calculateValue(cards, setDealercounter, dealercounter)
+
+            }
+            else if (dealercard.length > 2){
+                let cards = dealercard
+               let obj = dealercard[1]
+               obj.hidden = false
+               cards[1] = obj;
+               setDealercard(cards)
+               sethiddencard(false)
+               calculateValue(cards, setDealercounter, dealercounter)
+
+            }
+            /*
+            if (dealercounter <= 16 && dealercard.length == 2){
+                getCard(setDealercard, dealercard)
+            }
+            */
+        }
+
+        
+    }, [dealercard]);  
+
+    if(loading){
+        return (
+            <LinearProgress></LinearProgress>
+        )
+    }
+
 
     return (<div className="App">
         <header className="App-header">
@@ -118,7 +194,7 @@ export default function Cards() {
 
                 </Grid>
                 <Grid item>
-                    <Button class="PlayerBtn" variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}><img class="drawImg" src={draw} />Player</Button>
+                    <Button class="PlayerBtn" variant="contained" onClick={(e) => getCard(setPlayercard, playercard)}><img class="drawImg"  />Player</Button>
                 </Grid>
 
 
