@@ -20,6 +20,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { TextField } from '@mui/material';
 
+const delay = ms => new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
+
 
 export default function Cards() {
 
@@ -36,15 +40,18 @@ export default function Cards() {
 
     const [win, setWin] = useState(false)
     const [lost, setLost] = useState(false)
+    const [draw, setDraw] = useState(false)
 
     const handlewinshow = () => { setWin(true); };
-    const handlewinclose = () => { setWin(false); };
+    const handlewinclose = () => { setWin(false); clearCards(); };
 
     const handlelostshow = () => { setLost(true); };
-    const handlelostclose = () => { setLost(false); };
+    const handlelostclose = () => { setLost(false); clearCards(); };
+
+    const handledrawshow = () => { setDraw(true); };
+    const handledrawclose = () => { setDraw(false); clearCards(); };
 
     const [value, setValue] = useState(10);
-
 
 
     function getDeck() {
@@ -131,7 +138,10 @@ export default function Cards() {
         }
     }
 
-    function checkwin(){
+    async function checkwin(){
+
+        await delay(250);
+
 
         let playervalue = 0
         for (let card of playercard) {
@@ -187,17 +197,22 @@ export default function Cards() {
         if (dealervalue > playervalue && dealervalue <= 21) {
             handlelostshow()
         }
-        else if (dealervalue < playervalue && playervalue <= 21) {
-            handlewinshow()
+        else if(dealervalue == playervalue){
+            handledrawshow()
+        }
 
+        if(playervalue <= 21){
+            handlewinshow()
+        }
+        else {
+            handlelostshow()
         }
     }
 
-    function checkdealer(){
-
-
+    function checkdealer(dcards){
+        let cards = dcards
         let dealervalue = 0
-        for (let card of dealercard) {
+        for (let card of cards) {
             if (card.value == "KING") {
                 dealervalue += 10
             }
@@ -219,34 +234,51 @@ export default function Cards() {
                 dealervalue += parseInt(card.value)
             }
         }
+        return dealervalue
+    }
 
-        console.log(dealervalue)
-        
-        if (dealervalue < 17) {
+    async function stay() {
+        sethiddencard(false)
+
+        if(checkdealer(dealercard) < 17){
+            console.log(checkdealer(dealercard))
+            
             getCard(setDealercard, dealercard)
+            await delay(250);
+
+            if(checkdealer(dealercard) < 17){
+                console.log(checkdealer(dealercard))
+                getCard(setDealercard, dealercard)
+                await delay(250);
+    
+            }
+
         }
-    }
 
-    function stay() {
-        if (dealercounter < 17) {
-            getCard(setDealercard, dealercard)
-        }
-        checkdealer()
+        checkwin()
+
     }
 
 
 
 
-    function startGame() {
+    async function startGame() {
         getCard(setPlayercard, playercard)
+        await delay(250);
         getCard(setPlayercard, playercard)
+        await delay(250);
         getCard(setDealercard, dealercard)
+        await delay(250);
         getCard(setDealercard, dealercard)
+        await delay(250);
+
     }
 
-    function clearCards() {
+    async function clearCards() {
         setPlayercard([]);
         setDealercard([]);
+        sethiddencard(true)
+        await delay(500);
         startGame()
     }
 
@@ -284,16 +316,6 @@ export default function Cards() {
                 obj.hidden = true
                 cards[1] = obj;
                 setDealercard(cards)
-                calculateValue(cards, setDealercounter, dealercounter)
-
-            }
-            else if (dealercard.length > 2) {
-                let cards = dealercard
-                let obj = dealercard[1]
-                obj.hidden = false
-                cards[1] = obj;
-                setDealercard(cards)
-                sethiddencard(false)
                 calculateValue(cards, setDealercounter, dealercounter)
 
             }
@@ -337,7 +359,7 @@ export default function Cards() {
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
                     {dealercard.map((c) =>
                         <Grid item>
-                            {c.hidden
+                            {c.hidden && hiddencard == true
                                 ? <img height={"80vh"} src="Turnover.png"></img>
                                 :
                                 <>
@@ -345,7 +367,15 @@ export default function Cards() {
                                     <p style={{ color: "white" }}>{c.value}</p>
                                 </>
                             }
-                        </Grid>)}
+                        </Grid>
+                    )}
+
+                        <Grid item>
+                            {hiddencard == false
+                               ?<p>{dealercounter}</p>
+                               :<></>
+                            }
+                        </Grid>
                 </Grid>
     
 
@@ -391,7 +421,7 @@ export default function Cards() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handlewinclose} autoFocus>
-            Agree
+            Ok
           </Button>
         </DialogActions>
       </Dialog>
@@ -404,7 +434,20 @@ export default function Cards() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handlelostclose} autoFocus>
-            Agree
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={draw} onClose={handledrawclose}>
+        <DialogTitle id="alert-dialog-title">
+          {"Draw!"}
+        </DialogTitle>
+        <DialogContent>
+            Its a Draw!
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handledrawclose} autoFocus>
+            Ok
           </Button>
         </DialogActions>
       </Dialog>
