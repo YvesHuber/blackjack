@@ -7,6 +7,12 @@ import { useEffect, useState } from 'react';
 import { sizeHeight } from '@mui/system';
 import LinearProgress from '@mui/material/LinearProgress';
 
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
+
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,8 +25,8 @@ export default function Cards() {
 
     const [deck, setDeck] = useState([]);
     const [deckID, setDeckID] = useState();
-    const [betfield, setBetField] = useState();
-    const [bet, setBet] = useState();
+    const [betfield, setBetField] = useState(0);
+    const [bet, setBet] = useState(0);
     const [dealercard, setDealercard] = useState([])
     const [playercard, setPlayercard] = useState([])
     const [playercounter, setPlayercounter] = useState([0])
@@ -37,6 +43,10 @@ export default function Cards() {
     const handlelostshow = () => { setLost(true); };
     const handlelostclose = () => { setLost(false); };
 
+    const [value, setValue] = useState(10);
+
+
+
     function getDeck() {
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
             .then(response => response.json())
@@ -44,6 +54,7 @@ export default function Cards() {
             .catch((error) => {
             });
     }
+
 
     function calculateValue(cards, setcounter, counter) {
         setcounter(0)
@@ -87,25 +98,140 @@ export default function Cards() {
     }
     function call() {
         getCard(setPlayercard, playercard)
+        checkloss()
     }
-    function stay() {
-        if (dealercounter < 17) {
-            getCard(setDealercard, dealercard)
-            calculateValue(dealercard, setDealercounter, dealercounter)
-            if (dealercounter < 17){
-                getCard(setDealercard, dealercard)
-                calculateValue(dealercard, setDealercounter, dealercounter)
-               
+
+    function checkloss(){
+        let playervalue = 0
+        for (let card of playercard) {
+            if (card.value == "KING") {
+                playervalue += 10
+            }
+            else if (card.value == "QUEEN") {
+                playervalue += 10
+            }
+            else if (card.value == "JACK") {
+                playervalue += 10
+            }
+            else if (card.value == "ACE") {
+                if (playervalue + 11 > 21) {
+                    playervalue += 1
+                }
+                else {
+                    playervalue += 11
+                }
+            }
+            else {
+                playervalue += parseInt(card.value)
+            }
+        }
+        console.log(playervalue)
+        if(playervalue > 21){
+            handlelostshow()
+        }
+    }
+
+    function checkwin(){
+
+        let playervalue = 0
+        for (let card of playercard) {
+            if (card.value == "KING") {
+                playervalue += 10
+            }
+            else if (card.value == "QUEEN") {
+                playervalue += 10
+            }
+            else if (card.value == "JACK") {
+                playervalue += 10
+            }
+            else if (card.value == "ACE") {
+                if (playervalue + 11 > 21) {
+                    playervalue += 1
+                }
+                else {
+                    playervalue += 11
+                }
+            }
+            else {
+                playervalue += parseInt(card.value)
             }
         }
 
-        if (dealercounter > playercounter && dealercounter <= 21) {
+        let dealervalue = 0
+        for (let card of dealercard) {
+            if (card.value == "KING") {
+                dealervalue += 10
+            }
+            else if (card.value == "QUEEN") {
+                dealervalue += 10
+            }
+            else if (card.value == "JACK") {
+                dealervalue += 10
+            }
+            else if (card.value == "ACE") {
+                if (dealervalue + 11 > 21) {
+                    dealervalue += 1
+                }
+                else {
+                    dealervalue += 11
+                }
+            }
+            else {
+                dealervalue += parseInt(card.value)
+            }
+        }
+
+        console.log(dealervalue)
+        console.log(playervalue)
+        
+        if (dealervalue > playervalue && dealervalue <= 21) {
             handlelostshow()
         }
-        else if (dealercounter < playercounter && playercounter <= 21) {
+        else if (dealervalue < playervalue && playervalue <= 21) {
             handlewinshow()
 
         }
+    }
+
+    function checkdealer(){
+
+
+        let dealervalue = 0
+        for (let card of dealercard) {
+            if (card.value == "KING") {
+                dealervalue += 10
+            }
+            else if (card.value == "QUEEN") {
+                dealervalue += 10
+            }
+            else if (card.value == "JACK") {
+                dealervalue += 10
+            }
+            else if (card.value == "ACE") {
+                if (dealervalue + 11 > 21) {
+                    dealervalue += 1
+                }
+                else {
+                    dealervalue += 11
+                }
+            }
+            else {
+                dealervalue += parseInt(card.value)
+            }
+        }
+
+        console.log(dealervalue)
+        
+        if (dealervalue < 17) {
+            getCard(setDealercard, dealercard)
+        }
+    }
+
+    function stay() {
+        if (dealercounter < 17) {
+            getCard(setDealercard, dealercard)
+        }
+        checkdealer()
     }
 
 
@@ -127,6 +253,10 @@ export default function Cards() {
     useEffect(() => {
         getDeck()
     }, []);
+
+    useEffect(() => {
+        console.log(betfield)
+    }, [betfield]);
     useEffect(() => {
         calculateValue(playercard, setPlayercounter, playercounter)
     }, [playercard]);
@@ -196,11 +326,8 @@ export default function Cards() {
             <Grid container rowSpacing={3} alignItems="flex-start" justifyContent="center">
 
             <Grid>
-                    <TextField onChange={(e) => setBetField(e.target.field)}></TextField>
-                    <Button onClick={(e) => setBet(betfield)}>Bet</Button>
-                </Grid>
-                <Grid>
-                    Current Bet {bet}
+ 
+            <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
                 </Grid>
 
                 <Grid>
