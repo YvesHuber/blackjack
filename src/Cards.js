@@ -349,7 +349,6 @@ export default function Cards() {
 
             <Grid>
  
-            <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
                 </Grid>
 
                 <Grid>
@@ -360,22 +359,23 @@ export default function Cards() {
                     {dealercard.map((c) =>
                         <Grid item>
                             {c.hidden && hiddencard == true
-                                ? <img height={"80vh"} src="Turnover.png"></img>
+                                ? <img height={"180vh"} src="Turnover.png" class='turnover'></img>
                                 :
                                 <>
-                                    <img height={"80vh"} src={c.image}></img>
+                                    <img height={"150vh"} src={c.image}></img>
                                     <p style={{ color: "white" }}>{c.value}</p>
                                 </>
                             }
-                        </Grid>
-                    )}
-
-                        <Grid item>
+                            <Grid item>
                             {hiddencard == false
                                ?<p>{dealercounter}</p>
                                :<></>
                             }
                         </Grid>
+                        </Grid>
+                    )}
+
+                        
                 </Grid>
     
 
@@ -386,11 +386,11 @@ export default function Cards() {
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
 
                     {playercard.map((c) => <Grid item >
-                        <img class="cards" height={"80vh"} src={c.image}></img>
+                        <img class="cards" height={"150vh"} src={c.image}></img>
                         <p style={{ color: "white" }}>{c.value}</p>
                     </Grid>
                     )}
-                    <img height={"150vh"} src='/dick2.png' class="dick"></img>
+                    <img height={"250vh"} src='/dick2.png' class="dick"></img>
 
                 </Grid>
 
@@ -400,14 +400,14 @@ export default function Cards() {
                 </Grid>
 
 
-                <Grid item>
-                    <Button class="CallBtn" variant="contained" onClick={(e) => call()}><img class="drawImg" />Call</Button>
+                <Grid item >
+                    <Button class="CallBtn" variant="contained" onClick={(e) => call()}><img class="hitImg" src="/hit.png" />Hit</Button>
                 </Grid>
-                <Grid item>
-                    <Button class="StayBtn" variant="contained" onClick={(e) => stay()}><img class="drawImg" />Stay</Button>
+                <Grid item >
+                    <Button class="StayBtn" variant="contained" onClick={(e) => stay()}><img class="stayImg" src="/stay.png" />Stay</Button>
                 </Grid>
 
-                <Grid item>
+                <Grid item >
                     <Button class="RestartBtn" variant="contained" onClick={clearCards}>Restart</Button>
                 </Grid>
 
