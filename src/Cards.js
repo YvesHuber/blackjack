@@ -394,9 +394,11 @@ export default function Cards() {
 
                         </Grid>
                     )}
-                    <Grid item>
+                    <Grid item style={{
+                    color: "white", fontWeight: "bold", fontSize: "45px", radius: "100px", padding: "15px"
+                }}>
                         {hiddencard === false
-                            ? <p>{dealercounter}</p>
+                            ? <p style={{ border: "2px solid gold", borderRadius: "100px", padding: "15px" }}>{dealercounter}</p>
                             : <></>
                         }
                     </Grid>
