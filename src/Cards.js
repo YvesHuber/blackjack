@@ -22,7 +22,7 @@ import { TextField } from '@mui/material';
 
 const delay = ms => new Promise(
     resolve => setTimeout(resolve, ms)
-  );
+);
 
 
 export default function Cards() {
@@ -67,17 +67,16 @@ export default function Cards() {
         setcounter(0)
         let value = 0
         for (let card of cards) {
-            console.log(card)
-            if (card.value == "KING") {
+            if (card.value === "KING") {
                 value = 10
             }
-            else if (card.value == "QUEEN") {
+            else if (card.value === "QUEEN") {
                 value = 10
             }
-            else if (card.value == "JACK") {
+            else if (card.value === "JACK") {
                 value = 10
             }
-            else if (card.value == "ACE") {
+            else if (card.value === "ACE") {
                 if (counter + 11 > 21) {
                     value = 1
                 }
@@ -95,6 +94,31 @@ export default function Cards() {
 
     }
 
+    function addtempCard(card, currentvalue) {
+        let value = 0
+        if (card.value === "KING") {
+            value = 10
+        }
+        else if (card.value === "QUEEN") {
+            value = 10
+        }
+        else if (card.value === "JACK") {
+            value = 10
+        }
+        else if (card.value === "ACE") {
+            if (currentvalue + 11 > 21) {
+                value = 1
+            }
+            else {
+                value = 11
+            }
+        }
+        else {
+            value = parseInt(card.value)
+        }
+        return value
+    }
+
     function getCard(setCard, currentCards) {
         fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
             .then(response => response.json())
@@ -108,19 +132,19 @@ export default function Cards() {
         checkloss()
     }
 
-    function checkloss(){
+    function checkloss() {
         let playervalue = 0
         for (let card of playercard) {
-            if (card.value == "KING") {
+            if (card.value === "KING") {
                 playervalue += 10
             }
-            else if (card.value == "QUEEN") {
+            else if (card.value === "QUEEN") {
                 playervalue += 10
             }
-            else if (card.value == "JACK") {
+            else if (card.value === "JACK") {
                 playervalue += 10
             }
-            else if (card.value == "ACE") {
+            else if (card.value === "ACE") {
                 if (playervalue + 11 > 21) {
                     playervalue += 1
                 }
@@ -133,28 +157,28 @@ export default function Cards() {
             }
         }
         console.log(playervalue)
-        if(playervalue > 21){
+        if (playervalue > 21) {
             handlelostshow()
         }
     }
 
-    async function checkwin(){
+    async function checkwin() {
 
         await delay(250);
 
 
         let playervalue = 0
         for (let card of playercard) {
-            if (card.value == "KING") {
+            if (card.value === "KING") {
                 playervalue += 10
             }
-            else if (card.value == "QUEEN") {
+            else if (card.value === "QUEEN") {
                 playervalue += 10
             }
-            else if (card.value == "JACK") {
+            else if (card.value === "JACK") {
                 playervalue += 10
             }
-            else if (card.value == "ACE") {
+            else if (card.value === "ACE") {
                 if (playervalue + 11 > 21) {
                     playervalue += 1
                 }
@@ -169,16 +193,16 @@ export default function Cards() {
 
         let dealervalue = 0
         for (let card of dealercard) {
-            if (card.value == "KING") {
+            if (card.value === "KING") {
                 dealervalue += 10
             }
-            else if (card.value == "QUEEN") {
+            else if (card.value === "QUEEN") {
                 dealervalue += 10
             }
-            else if (card.value == "JACK") {
+            else if (card.value === "JACK") {
                 dealervalue += 10
             }
-            else if (card.value == "ACE") {
+            else if (card.value === "ACE") {
                 if (dealervalue + 11 > 21) {
                     dealervalue += 1
                 }
@@ -193,15 +217,15 @@ export default function Cards() {
 
         console.log(dealervalue)
         console.log(playervalue)
-        
+
         if (dealervalue > playervalue && dealervalue <= 21) {
             handlelostshow()
         }
-        else if(dealervalue == playervalue){
+        else if (dealervalue === playervalue) {
             handledrawshow()
         }
 
-        if(playervalue <= 21){
+        if (playervalue <= 21) {
             handlewinshow()
         }
         else {
@@ -209,20 +233,25 @@ export default function Cards() {
         }
     }
 
-    function checkdealer(dcards){
-        let cards = dcards
+
+    async function stay() {
+        sethiddencard(false)
+
+        let tempcard = {}
+        let tempcatd2 = {}
+        let cards = dealercard
         let dealervalue = 0
         for (let card of cards) {
-            if (card.value == "KING") {
+            if (card.value === "KING") {
                 dealervalue += 10
             }
-            else if (card.value == "QUEEN") {
+            else if (card.value === "QUEEN") {
                 dealervalue += 10
             }
-            else if (card.value == "JACK") {
+            else if (card.value === "JACK") {
                 dealervalue += 10
             }
-            else if (card.value == "ACE") {
+            else if (card.value === "ACE") {
                 if (dealervalue + 11 > 21) {
                     dealervalue += 1
                 }
@@ -234,26 +263,22 @@ export default function Cards() {
                 dealervalue += parseInt(card.value)
             }
         }
-        return dealervalue
-    }
+        console.log(dealervalue)
+        do {
 
-    async function stay() {
-        sethiddencard(false)
+            fetch('https://deckofcardsapi.com/api/deck/' + deckID + '/draw/?count=1')
+                .then(response => response.json())
+                .then(data => tempcard = data.cards[0])
+                // .then(data => setCard(data.cards[0]))            //so wird die Karte jeweils überschrieben
+                .catch((error) => {
+                });
+            await delay(1250);
+            console.log(tempcard)
+            setDealercard(dealercard => [...dealercard, tempcard])
+            dealervalue += addtempCard(tempcard, dealervalue)
 
-        if(checkdealer(dealercard) < 17){
-            console.log(checkdealer(dealercard))
-            
-            getCard(setDealercard, dealercard)
-            await delay(250);
 
-            if(checkdealer(dealercard) < 17){
-                console.log(checkdealer(dealercard))
-                getCard(setDealercard, dealercard)
-                await delay(250);
-    
-            }
-
-        }
+        } while (dealervalue < 17)
 
         checkwin()
 
@@ -293,7 +318,7 @@ export default function Cards() {
         calculateValue(playercard, setPlayercounter, playercounter)
     }, [playercard]);
     useEffect(() => {
-        if(playercounter > 21){
+        if (playercounter > 21) {
             stay()
         }
     }, [playercounter]);
@@ -310,7 +335,7 @@ export default function Cards() {
 
     useEffect(() => {
         if (dealercard != undefined) {
-            if (dealercard.length == 2) {
+            if (dealercard.length === 2) {
                 let cards = dealercard
                 let obj = dealercard[1]
                 obj.hidden = true
@@ -320,7 +345,7 @@ export default function Cards() {
 
             }
             /*
-            if (dealercounter <= 16 && dealercard.length == 2){
+            if (dealercounter <= 16 && dealercard.length === 2){
                 getCard(setDealercard, dealercard)
             }
             */
@@ -347,8 +372,8 @@ export default function Cards() {
             {/*{card && <img src={card.image}></img>}      dies hat nur funktioniert als card oben noch kein Array war*/}
             <Grid container rowSpacing={3} alignItems="flex-start" justifyContent="center">
 
-            <Grid>
- 
+                <Grid>
+
                 </Grid>
 
                 <Grid>
@@ -358,7 +383,7 @@ export default function Cards() {
                 <Grid container spacing={5} alignItems="center" justifyContent="center">
                     {dealercard.map((c) =>
                         <Grid item>
-                            {c.hidden && hiddencard == true
+                            {c.hidden && hiddencard === true
                                 ? <img height={"180vh"} src="Turnover.png" class='turnover'></img>
                                 :
                                 <>
@@ -366,18 +391,19 @@ export default function Cards() {
                                     <p style={{ color: "white" }}>{c.value}</p>
                                 </>
                             }
-                            <Grid item>
-                            {hiddencard == false
-                               ?<p>{dealercounter}</p>
-                               :<></>
-                            }
-                        </Grid>
+
                         </Grid>
                     )}
+                    <Grid item>
+                        {hiddencard === false
+                            ? <p>{dealercounter}</p>
+                            : <></>
+                        }
+                    </Grid>
 
-                        
+
                 </Grid>
-    
+
 
                 <Grid>
                     <h2 className='playerTitle'>Player</h2>
@@ -395,8 +421,9 @@ export default function Cards() {
                 </Grid>
 
                 <Grid item style={{
-                    color: "white", fontWeight: "bold", fontSize: "45px", radius: "100px",padding:"15px" }}>
-                    <p style={{border: "2px solid gold", borderRadius: "100px",padding: "15px"}}>{playercounter}</p>   
+                    color: "white", fontWeight: "bold", fontSize: "45px", radius: "100px", padding: "15px"
+                }}>
+                    <p style={{ border: "2px solid gold", borderRadius: "100px", padding: "15px" }}>{playercounter}</p>
                 </Grid>
 
 
@@ -413,44 +440,44 @@ export default function Cards() {
 
             </Grid>
             <Dialog open={win} onClose={handlewinclose}>
-        <DialogTitle id="alert-dialog-title">
-          {"You Won"}
-        </DialogTitle>
-        <DialogContent>
-        You won {bet *2}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlewinclose} autoFocus>
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={lost} onClose={handlelostclose}>
-        <DialogTitle id="alert-dialog-title">
-          {"You Lost"}
-        </DialogTitle>
-        <DialogContent>
-            You lost {bet}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlelostclose} autoFocus>
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={draw} onClose={handledrawclose}>
-        <DialogTitle id="alert-dialog-title">
-          {"Draw!"}
-        </DialogTitle>
-        <DialogContent>
-            Its a Draw!
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handledrawclose} autoFocus>
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
+                <DialogTitle id="alert-dialog-title">
+                    {"You Won"}
+                </DialogTitle>
+                <DialogContent>
+                    You won {bet * 2}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handlewinclose} autoFocus>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={lost} onClose={handlelostclose}>
+                <DialogTitle id="alert-dialog-title">
+                    {"You Lost"}
+                </DialogTitle>
+                <DialogContent>
+                    You lost {bet}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handlelostclose} autoFocus>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={draw} onClose={handledrawclose}>
+                <DialogTitle id="alert-dialog-title">
+                    {"Draw!"}
+                </DialogTitle>
+                <DialogContent>
+                    Its a Draw!
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handledrawclose} autoFocus>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </header>
     </div>
 
