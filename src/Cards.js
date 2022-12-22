@@ -238,7 +238,6 @@ export default function Cards() {
         sethiddencard(false)
 
         let tempcard = {}
-        let tempcatd2 = {}
         let cards = dealercard
         let dealervalue = 0
         for (let card of cards) {
@@ -272,7 +271,7 @@ export default function Cards() {
                 // .then(data => setCard(data.cards[0]))            //so wird die Karte jeweils überschrieben
                 .catch((error) => {
                 });
-            await delay(1250);
+            await delay(250);
             console.log(tempcard)
             setDealercard(dealercard => [...dealercard, tempcard])
             dealervalue += addtempCard(tempcard, dealervalue)
