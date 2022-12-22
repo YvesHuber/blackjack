@@ -445,7 +445,7 @@ export default function Cards() {
                     {"You Won"}
                 </DialogTitle>
                 <DialogContent>
-                    You won {bet * 2}
+                    You won 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handlewinclose} autoFocus>
@@ -458,7 +458,7 @@ export default function Cards() {
                     {"You Lost"}
                 </DialogTitle>
                 <DialogContent>
-                    You lost {bet}
+                    You lost
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handlelostclose} autoFocus>
